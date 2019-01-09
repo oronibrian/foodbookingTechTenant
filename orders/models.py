@@ -1,17 +1,24 @@
 from django.db import models
 from shop.models import Product
+from phonenumber_field.modelfields import PhoneNumberField
+import string
+import uuid
+import random
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for _ in range(size))
 
 
 class Order(models.Model):
-    first_name = models.CharField(max_length=60)
-    last_name = models.CharField(max_length=60)
+    order_id= models.CharField(max_length=6, editable=False)
+    name = models.CharField(max_length=60)
     email = models.EmailField()
+    phone_number = PhoneNumberField()
     address = models.CharField(max_length=150)
-    postal_code = models.CharField(max_length=30)
-    city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+
 
     class Meta:
         ordering = ('-created', )
@@ -21,6 +28,16 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
+
+
+    def save(self,*args,**kwargs):
+        if not self.order_id:
+            # Generate ID once, then check the db. If exists, keep trying.
+            self.order_id = id_generator()
+
+            while Order.objects.filter(order_id=self.order_id).exists():
+                self.order_id = id_generator()
+        super(Order, self).save(*args, **kwargs)
 
 
 class OrderItem(models.Model):

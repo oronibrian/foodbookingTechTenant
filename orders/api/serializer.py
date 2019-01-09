@@ -8,11 +8,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ("id","first_name", "last_name", "email",
-         "address", "city","created","updated","paid")
+        fields = ("order_id","name", "email","phone_number",
+         "address","created","updated")
         
-        readonly_field=['id','short_description','restaurant']
-
+        readonly_field=['order_id']
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

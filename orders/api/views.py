@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from orders.models import Order,OrderItem
 from rest_framework import generics,mixins
-from .serializers import OrderSerializer,OrderItemSerializer
+from .serializer import OrderSerializer,OrderItemSerializer
 from django.db.models import Q
 
 class OrderCreateView(mixins.CreateModelMixin,generics.ListAPIView):
@@ -22,10 +22,13 @@ class OrderCreateView(mixins.CreateModelMixin,generics.ListAPIView):
 	def post(self,request,*args,**kwargs):
 		return self.create(request,*args,**kwargs)
 
-# class MealRUDView(generics.RetrieveUpdateAPIView):
-# 	lookup_field='pk'
+class OrderRUDView(generics.RetrieveUpdateDestroyAPIView):
+	lookup_field='pk'
 
-# 	serializer_class=OrderItemSerializer
+	serializer_class=OrderSerializer
 
-# 	def get_queryset(self):
-# 		return Meal.objects.all()
+	def get_queryset(self):
+		return Order.objects.all()
+
+
+
