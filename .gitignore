@@ -8,9 +8,9 @@ __pycache__/
 .DS_STORE
 
 # Database stuff
-*.sqlite3
-migrations/
-db.sqlite3
+# *.sqlite3
+# migrations/
+# db.sqlite3
 
 media_cdn/
 static_cdn/
