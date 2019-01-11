@@ -2,7 +2,8 @@ from django.shortcuts import render
 from .models import OrderItem
 from .forms import OrderCreateForm
 from cart.cart import Cart
-
+from rest_framework import viewsets
+from orders.api.serializer import OrderItemSerializer
 
 def order_create(request):
     cart = Cart(request)
@@ -22,3 +23,12 @@ def order_create(request):
     else:
         form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'form': form})
+
+
+
+class OrderItemViewSet(viewsets.ReadOnlyModelViewSet):
+        """
+        This viewset automatically provides `list` and `detail` actions.
+        """
+        queryset = OrderItem.objects.all()
+        serializer_class = OrderItemSerializer

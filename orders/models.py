@@ -24,10 +24,10 @@ class Order(models.Model):
         ordering = ('-created', )
 
     def __str__(self):
-        return 'Order {}'.format(self.id)
+        return 'Order: {}'.format(self.order_id)
 
-    def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
+    # def get_total_cost(self):
+    #     return sum(item.get_cost() for item in self.items.all())
 
 
     def save(self,*args,**kwargs):
@@ -45,10 +45,15 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return '{}'.format(self.id)
+        return '{}'.format(self.product)
 
     def get_cost(self):
         return self.price * self.quantity
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.total=self.price * self.quantity
+
+        return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 

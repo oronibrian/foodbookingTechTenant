@@ -13,6 +13,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
 
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['id', 'product', 'quantity',]
+    list_filter = ['product', 'quantity', 'order']
 
 admin.site.register(Order, OrderAdmin)
 
+admin.site.register(OrderItem,OrderItemAdmin)
